@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
+    integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+
+  <script src="https://polyfill.io/v3/polyfill.min.js?features=default"></script>
+  <link rel="stylesheet" type="text/css" href="style.css">
+
+  <title>VADS</title>
+
+</head>
+
+<body>
+  <header>
+    <nav class="navbar navbar-light bg-light">
+      <span class="navbar-brand mb-0 h1">Оценка индивидуальной безопасности движения по заданному маршруту</span>
+    </nav>
+  </header>
+
+  <div class="container-fluid">
+    <div class="row">
+      <div class="col item">
+        <div class="input-group mb-4">
+          <div class="input-group-prepend">
+            <span class="input-group-text" id="inputGroup-sizing-lg">Ваш возраст</span>
+          </div>
+          <input id="Age" value="NaN" type="number" class="form-control" aria-label="Small" aria-describedby="inputGroup-sizing-sm">
+        </div>
+      </div>
+      <div class="col item">
+        <div class="input-group mb-4">
+          <div class="input-group-prepend">
+            <span class="input-group-text" id="inputGroup-sizing-lg">Ваш стаж</span>
+          </div>
+          <input id="Experience" value="NaN" type="number" class="form-control" aria-label="Small"
+            aria-describedby="inputGroup-sizing-sm">
+        </div>
+      </div>
+      <div class="col item">
+        <div class="input-group mb-4">
+          <div class="input-group-prepend">
+            <label class="input-group-text" for="inputGroupSelect01">Ваше псих. сост.</label>
+          </div>
+          <select class="custom-select" id="Mental">
+            <option selected>Выбрать...</option>
+            <option value="1">Плохое</option>
+            <option value="2">Нормальное</option>
+            <option value="2">Отличное</option>
+          </select>
+        </div>
+      </div>
+      <div class="col item">
+        <div class="input-group mb-4">
+          <div class="input-group-prepend">
+            <label class="input-group-text" for="inputGroupSelect01">Ваш пол</label>
+          </div>
+          <select class="custom-select" id="Sex">
+            <option selected>Выбрать...</option>
+            <option value="1">Мужской</option>
+            <option value="2">Женский</option>
+          </select>
+        </div>
+      </div>
+      <div class="col item">
+        <div class="input-group mb-4">
+          <div class="input-group-prepend">
+            <label class="input-group-text" for="inputGroupSelect01">Автомобиль</label>
+          </div>
+          <select class="custom-select" id="Car">
+            <option selected>Выбрать...</option>
+
+          </select>
+        </div>
+      </div>
+      <div class="col item">
+        <div class="input-group mb-4">
+          <div class="input-group-prepend">
+            <span class="input-group-text" id="inputGroup-sizing-lg">Год выпуска</span>
+          </div>
+          <input id="CarYear" type="number" class="form-control" aria-label="Small"
+            aria-describedby="inputGroup-sizing-sm">
+        </div>
+      </div>
+    </div>
+  </div>
+  <!--Добавление карты с маршрутом-->
+  <div class="container-fluid">
+    <div class="row">
+      <div class="col-md-auto">
+        <div class="input-group mb-4">
+          <div class="input-group-prepend">
+            <span class="input-group-text" id="inputGroup-sizing-lg">Начальная точка</span>
+          </div>
+          <input id="start" type="text" class="form-control" aria-label="Large" aria-describedby="inputGroup-sizing-sm">
+        </div>
+      </div>
+      <div class="col-md-auto">
+        <div class="input-group mb-4">
+          <div class="input-group-prepend">
+            <span class="input-group-text" id="inputGroup-sizing-lg">Конечная точка</span>
+          </div>
+          <input id="end" type="text" class="form-control" aria-label="Large" aria-describedby="inputGroup-sizing-sm">
+        </div>
+      </div>
+      <div class="col-md-auto">
+        <h5 id="Intence"></h5>
+      </div>
+    </div>
+  </div>
+  </div>
+  <div id="map"></div>
+  <div class="container-fluid">
+    <div class="row">
+      <div class="col-md-auto">
+        <table class="table table-striped">
+          <thead>
+            <tr>
+              <th scope="col"></th>
+              <th scope="col">Дата</th>
+              <th scope="col">Температура</th>
+              <th scope="col">Давление</th>
+              <th scope="col">Осадки</th>
+              <th scope="col">Гололед</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <th scope="row"></th>
+              <td id="Date"></td>
+              <td id="Temp"></td>
+              <td id="Pressure"></td>
+              <td id="Rain"></td>
+              <td id="Ice"></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+  <div class="container-fluid">
+    <div class="row">
+      <div class="col-md-auto">
+        <h3>Расчитать безопасность вашей поездки</h3>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-md-auto">
+        <button id="Calc" type="button" class="btn btn-primary">Расчитать</button>
+      </div>
+      <div class="col-md-auto">
+        <h4 id="Save"></h4>
+      </div>
+    </div>
+
+
+  </div>
+
+
+
+
+  <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
+    integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN"
+    crossorigin="anonymous"></script>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"
+    integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
+    crossorigin="anonymous"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"
+    integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
+    crossorigin="anonymous"></script>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+
+  <script src="https://unpkg.com/brain.js"></script>
+  <script src="main.js" async></script>
+
+  <script
+    src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDkcl8B7kNB7qRLmfuEzl3VHue4tYNDVEA&callback=initMap&libraries=&v=weekly"
+    async></script>
+</body>
+
+
+</html>
