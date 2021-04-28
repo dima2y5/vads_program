@@ -81,9 +81,9 @@ $.ajax(settings).done(function (response) {
   $("#Ice").append(ice);
 
   //Интенсивность движения
-  if (((hours >= 8) || (hours <= 9)) | ((hours >= 17) || (hours <= 18))) {
+  if (((hours >= 8) && (hours <= 9)) || ((hours >= 17) && (hours <= 18))) {
     $("#Intence").append("Интенсивность движения: высокая");
-  } else if (((hours >= 10) || (hours <= 12)) | ((hours >= 19) || (hours <= 20))) {
+  } else if (((hours >= 10) && (hours <= 12)) || ((hours >= 19) && (hours <= 20))) {
     $("#Intence").append("Интенсивность движения: средняя");
   } else {
     $("#Intence").append("Интенсивность движения: низкая");
@@ -96,70 +96,121 @@ $.ajax(settings).done(function (response) {
 
 //Массив безопасности автомобилей
 var CarData = [
-  {value: 1, carName: "Hyundai Solaris", rating: 16.0},
-  {value: 2, carName: "Renault Arkana ", rating: 15.8},
-  {value: 3, carName: "Hyundai Creta", rating: 15.7},
-  {value: 4, carName: "Лада Веста", rating: 15.1},
-  {value: 5, carName: "Volkswagen Polo", rating: 14.3},
-  {value: 6, carName: "Лада XRAY", rating: 13.7},
-  {value: 7, carName: "Лада Веста SW Cross", rating: 11.7},
-  {value: 8, carName: "Ford Focus", rating: 11.6},
-  {value: 9, carName: "Daewoo Matiz", rating: 11.0},
-  {value: 10, carName: "Renault Logan", rating: 11.0},
-  {value: 11, carName: "Renault Symbol", rating: 10.9},
-  {value: 12, carName: "Лада Гранта Люкс", rating: 10.7},
-  {value: 13, carName: "Лада Калина Люкс", rating: 10.1},
-  {value: 14, carName: "Hyundai Accent", rating: 8.9},
-  {value: 15, carName: "Hyundai Solaris", rating: 8.5},
-  {value: 16, carName: "Лада Гранта", rating: 8.4},
-  {value: 17, carName: "Chevrolet Lanos", rating: 8.1},
-  {value: 18, carName: "Fiat Albea", rating: 7.5},
-  {value: 19, carName: "BYD F3", rating: 6.0},
-  {value: 20, carName: "Лада Приора", rating: 5.4},
-  {value: 21, carName: "Geely MK", rating: 6.5},
-  {value: 22, carName: "Лада ВАЗ-2110", rating: 0.7},
-  {value: 23, carName: "Лада ВАЗ-2109", rating: 2.7},
-  {value: 24, carName: "Chevrolet Niva", rating: 1.6},
-  {value: 25, carName: "Лада ВАЗ-21213 Нива", rating: 0.0},
-  {value: 26, carName: "ГАЗ Волга 3110", rating: 1.4},
-  {value: 27, carName: "Лада ВАЗ-2114", rating: 3.2},
-  {value: 28, carName: "Chery Amulet", rating: 1.7},
-  {value: 29, carName: "Daewoo Nexia", rating: 0.6},
-  {value: 30, carName: "Лада ВАЗ-2107", rating: 0.0},
+  { value: 1, carName: "Hyundai Solaris", rating: 16.0 },
+  { value: 2, carName: "Renault Arkana ", rating: 15.8 },
+  { value: 3, carName: "Hyundai Creta", rating: 15.7 },
+  { value: 4, carName: "Лада Веста", rating: 15.1 },
+  { value: 5, carName: "Volkswagen Polo", rating: 14.3 },
+  { value: 6, carName: "Лада XRAY", rating: 13.7 },
+  { value: 7, carName: "Лада Веста SW Cross", rating: 11.7 },
+  { value: 8, carName: "Ford Focus", rating: 11.6 },
+  { value: 9, carName: "Daewoo Matiz", rating: 11.0 },
+  { value: 10, carName: "Renault Logan", rating: 11.0 },
+  { value: 11, carName: "Renault Symbol", rating: 10.9 },
+  { value: 12, carName: "Лада Гранта Люкс", rating: 10.7 },
+  { value: 13, carName: "Лада Калина Люкс", rating: 10.1 },
+  { value: 14, carName: "Hyundai Accent", rating: 8.9 },
+  { value: 15, carName: "Hyundai Solaris", rating: 8.5 },
+  { value: 16, carName: "Лада Гранта", rating: 8.4 },
+  { value: 17, carName: "Chevrolet Lanos", rating: 8.1 },
+  { value: 18, carName: "Fiat Albea", rating: 7.5 },
+  { value: 19, carName: "BYD F3", rating: 6.0 },
+  { value: 20, carName: "Лада Приора", rating: 5.4 },
+  { value: 21, carName: "Geely MK", rating: 6.5 },
+  { value: 22, carName: "Лада ВАЗ-2110", rating: 0.7 },
+  { value: 23, carName: "Лада ВАЗ-2109", rating: 2.7 },
+  { value: 24, carName: "Chevrolet Niva", rating: 1.6 },
+  { value: 25, carName: "Лада ВАЗ-21213 Нива", rating: 0.0 },
+  { value: 26, carName: "ГАЗ Волга 3110", rating: 1.4 },
+  { value: 27, carName: "Лада ВАЗ-2114", rating: 3.2 },
+  { value: 28, carName: "Chery Amulet", rating: 1.7 },
+  { value: 29, carName: "Daewoo Nexia", rating: 0.6 },
+  { value: 30, carName: "Лада ВАЗ-2107", rating: 0.0 },
 ]
 
 $.each(CarData, function (i, CarData) {
-  $('#Car').append($('<option>', { 
-      value: CarData.value,
-      text : CarData.carName 
+  $('#Car').append($('<option>', {
+    value: CarData.value,
+    text: CarData.carName
   }));
 });
 
+
+
+
+
 $(test);
 function test() {
-
-
-  const net = new brain.NeuralNetwork();
-
-  net.train([
-    { input: [1, 1], output: [1] },
-    { input: [1, 0], output: [1] },
-    { input: [0, 1], output: [1] },
-    { input: [0, 0], output: [0] },
-  ]);
-
-
+  
   age = document.getElementById("Age").value;
   exp = document.getElementById("Experience").value;
   mental = document.getElementById("Mental").value;
   sex = document.getElementById("Sex").value;
-  car = document.getElementById("Car").value;
+
+  //Определение безопасности автомобиля
+  car = document.getElementById("Car");
+  carSafety = 0;
+  if ((car.value >= 1) && (car.value <= 13)) {
+    carSafety = 1
+  } else if ((car.value >= 14) && (car.value <= 18)){
+    carSafety = 0.75
+  } else if ((car.value >= 19) && (car.value <= 21)){
+    carSafety = 0.5
+  } else if ((car.value >= 22) && (car.value <= 30)){
+    carSafety = 0.25
+  }
+  
   cyear = document.getElementById("CarYear").value;
+  if ((cyear >= 2011) && (cyear <= 2021)) {
+    yearSafety = 1
+  } else if ((cyear >= 2002) && (cyear <= 2010)){
+    yearSafety = 0.75
+  } else if ((cyear >= 1995) && (cyear <= 2001)){
+    yearSafety = 0.5
+  } else if (cyear <= 1994){
+    yearSafety = 0.25
+  }
 
-  const output = net.run([age, exp]);
-  console.log(output[0])
+  
+  const CarNet = new brain.NeuralNetwork();
 
-  $('#Save').html(output[0]);
+  CarNet.train([
+    { input: {car: 1, year: 1}, output: {высокий: 1} },
+    { input: {car: 1, year: 0.75}, output: {высокий: 1} },
+    { input: {car: 1, year: 0.5}, output: {средний: 1} },
+    { input: {car: 1, year: 0.25}, output: {средний: 1} },
+    { input: {car: 0.75, year: 1}, output: {средний: 1} },
+    { input: {car: 0.75, year: 0.75}, output: {средний: 1} },
+    { input: {car: 0.75, year: 0.5}, output: {низкий: 1} },
+    { input: {car: 0.75, year: 0.25}, output: {низкий: 1} },
+    { input: {car: 0.5, year: 1}, output: {средний: 1} },
+    { input: {car: 0.5, year: 0.75}, output: {низкий: 1} },
+    { input: {car: 0.5, year: 0.5}, output: {низкий: 1} },
+    { input: {car: 0.5, year: 0.25}, output: {низкий: 1} },
+    { input: {car: 0.25, year: 1}, output: {средний: 1} },
+    { input: {car: 0.25, year: 0.75}, output: {низкий: 1} },
+    { input: {car: 0.25, year: 0.5}, output: {низкий: 1} },
+    { input: {car: 0.25, year: 0.25}, output: {низкий: 1} },
+  ]);
+  const outputCar = CarNet.run({car: carSafety, year: yearSafety});
+
+  console.log(getMax(outputCar))
+  //Конец определения безопасности автомобиля
+
+  function getMax(output){
+    let max = 0;
+    let safety;
+
+    for(let key in output){
+      const value = output[key];
+      if(value > max){
+        max = value;
+        safety = key;
+      }
+    }
+
+    return {safety: safety};
+  }
 
 }
 
