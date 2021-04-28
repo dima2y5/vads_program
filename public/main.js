@@ -142,10 +142,100 @@ $.each(CarData, function (i, CarData) {
 $(test);
 function test() {
   
+  //Определение состояния водителя
   age = document.getElementById("Age").value;
+  if ((age >= 30) && (age <= 40)) {
+    ageSafety = 1
+  } else if ((age >= 20) && (age <= 29)){
+    ageSafety = 0.8
+  } else if ((age >= 41) && (age <= 50)){
+    ageSafety = 0.6
+  } else if ((age >= 51) && (age <= 70)){
+    ageSafety = 0.4
+  } else if (((age >= 18) && (age <= 19)) || (age >= 71)){
+    ageSafety = 0.2
+  } 
+  
   exp = document.getElementById("Experience").value;
-  mental = document.getElementById("Mental").value;
-  sex = document.getElementById("Sex").value;
+  if (exp >= 10){
+    expSafety = 1
+  } else if ((exp >= 5) && (exp <= 9)){
+    expSafety = 0.75
+  } else if ((exp >= 3) && (exp <= 4)){
+    expSafety = 0.5
+  } else if ((exp >= 0) && (exp <= 2)){
+    expSafety = 0.25
+  }
+
+  mental = document.getElementById("Mental");
+  mentalSafety = 0;
+  if ((mental.value === 3)) {
+    mentalSafety = 1
+  } else if ((mental.value === 2)){
+    mentalSafety = 0.66
+  } else if ((mental.value === 1)){
+    mentalSafety = 0.33
+  }
+
+  sex = document.getElementById("Sex");
+  sexSafety = 0;
+  if ((sex.value === 1)) {
+    sexSafety = 1
+  } else if ((sex.value === 2)){
+    sexSafety = 0.5
+  }
+
+  const DriverNet = new brain.NeuralNetwork();
+
+  DriverNet.train([
+    { input: {age: 1, exp: 1, mental: 1, sex: 1}, output: {высокий: 1} },
+    { input: {age: 1, exp: 1, mental: 1, sex: 0.5}, output: {высокий: 1} },
+    { input: {age: 1, exp: 0.75, mental: 0.66, sex: 1}, output: {высокий: 1} },
+    { input: {age: 1, exp: 0.5, mental: 0.33, sex: 0.5}, output: {средний: 1} },
+    { input: {age: 1, exp: 0.25, mental: 1, sex: 1}, output: {средний: 1} },
+    { input: {age: 1, exp: 0.5, mental: 0.66, sex: 1}, output: {средний: 1} },
+    { input: {age: 1, exp: 0.25, mental: 0.33, sex: 0.5}, output: {низкий: 1} },
+    { input: {age: 1, exp: 0.25, mental: 0.33, sex: 1}, output: {низкий: 1} },
+    { input: {age: 0.8, exp: 1, mental: 1, sex: 1}, output: {высокий: 1} },
+    { input: {age: 0.8, exp: 1, mental: 1, sex: 0.5}, output: {высокий: 1} },
+    { input: {age: 0.8, exp: 0.75, mental: 0.66, sex: 1}, output: {высокий: 1} },
+    { input: {age: 0.8, exp: 0.5, mental: 0.33, sex: 0.5}, output: {средний: 1} },
+    { input: {age: 0.8, exp: 0.25, mental: 1, sex: 1}, output: {средний: 1} },
+    { input: {age: 0.8, exp: 0.25, mental: 0.33, sex: 0.5}, output: {низкий: 1} },
+    { input: {age: 0.8, exp: 0.25, mental: 0.33, sex: 1}, output: {низкий: 1} },
+    { input: {age: 0.8, exp: 0.5, mental: 0.66, sex: 1}, output: {средний: 1} },
+    { input: {age: 0.6, exp: 1, mental: 1, sex: 1}, output: {средний: 1} },
+    { input: {age: 0.6, exp: 1, mental: 1, sex: 0.5}, output: {средний: 1} },
+    { input: {age: 0.6, exp: 0.75, mental: 0.66, sex: 1}, output: {средний: 1} },
+    { input: {age: 0.6, exp: 0.5, mental: 0.33, sex: 0.5}, output: {средний: 1} },
+    { input: {age: 0.6, exp: 0.25, mental: 1, sex: 1}, output: {низкий: 1} },
+    { input: {age: 0.6, exp: 0.5, mental: 0.66, sex: 1}, output: {средний: 1} },
+    { input: {age: 0.6, exp: 0.25, mental: 0.33, sex: 0.5}, output: {низкий: 1} },
+    { input: {age: 0.6, exp: 0.25, mental: 0.33, sex: 1}, output: {низкий: 1} },
+    { input: {age: 0.4, exp: 1, mental: 1, sex: 1}, output: {средний: 1} },
+    { input: {age: 0.4, exp: 1, mental: 1, sex: 0.5}, output: {средний: 1} },
+    { input: {age: 0.4, exp: 0.75, mental: 0.66, sex: 1}, output: {низкий: 1} },
+    { input: {age: 0.4, exp: 0.5, mental: 0.33, sex: 0.5}, output: {низкий: 1} },
+    { input: {age: 0.4, exp: 0.25, mental: 1, sex: 1}, output: {низкий: 1} },
+    { input: {age: 0.4, exp: 0.5, mental: 0.66, sex: 1}, output: {низкий: 1} },
+    { input: {age: 0.4, exp: 0.25, mental: 0.33, sex: 0.5}, output: {низкий: 1} },
+    { input: {age: 0.4, exp: 0.25, mental: 0.33, sex: 1}, output: {низкий: 1} },
+    { input: {age: 0.2, exp: 1, mental: 1, sex: 1}, output: {средний: 1} },
+    { input: {age: 0.2, exp: 1, mental: 1, sex: 0.5}, output: {средний: 1} },
+    { input: {age: 0.2, exp: 0.75, mental: 0.66, sex: 1}, output: {низкий: 1} },
+    { input: {age: 0.2, exp: 0.5, mental: 0.33, sex: 0.5}, output: {низкий: 1} },
+    { input: {age: 0.2, exp: 0.25, mental: 1, sex: 1}, output: {низкий: 1} },
+    { input: {age: 0.2, exp: 0.5, mental: 0.66, sex: 1}, output: {низкий: 1} },
+    { input: {age: 0.2, exp: 0.25, mental: 0.33, sex: 0.5}, output: {низкий: 1} },
+    { input: {age: 0.2, exp: 0.25, mental: 0.33, sex: 1}, output: {низкий: 1} },
+  ]);
+  const outputDriver = DriverNet.run({age: ageSafety, exp: expSafety, mental: mentalSafety, sex: sexSafety});
+
+  console.log("Driver")
+  console.log(getMax(outputDriver))
+
+
+
 
   //Определение безопасности автомобиля
   car = document.getElementById("Car");
@@ -194,9 +284,10 @@ function test() {
   ]);
   const outputCar = CarNet.run({car: carSafety, year: yearSafety});
 
+  console.log("Car")
   console.log(getMax(outputCar))
-  //Конец определения безопасности автомобиля
 
+  //Функция вывода максимальной вероятности
   function getMax(output){
     let max = 0;
     let safety;
@@ -217,8 +308,4 @@ function test() {
 
 
 Calc.addEventListener("click", test);
-
-
-
-
 
