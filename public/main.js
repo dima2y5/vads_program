@@ -57,9 +57,9 @@ $.ajax(settings).done(function (response) {
   //Определение осадков
   var rain = response.weather.main;
   if (rain === "Clear") {
-    rain = 'Нет';
+    rain1 = 'Нет';
   } else {
-    rain = 'Есть';
+    rain1 = 'Есть';
   }
 
   //Определение гололеда
@@ -71,26 +71,32 @@ $.ajax(settings).done(function (response) {
     ice = 'Нет';
   }
 
+  
+
   //Добавление данных в таблицу
   var content = datenorm;
   var pres = response.main.pressure / 1.333
   $("#Date").append(content);
   $("#Temp").append(response.main.temp + ' C');
   $("#Pressure").append(pres.toFixed(2) + ' мм. рт. ст.');
-  $("#Rain").append(rain);
+  $("#Rain").append(rain1);
   $("#Ice").append(ice);
 
   //Интенсивность движения
   if (((hours >= 8) && (hours <= 9)) || ((hours >= 17) && (hours <= 18))) {
     $("#Intence").append("Интенсивность движения: высокая");
+    outputRoad = 3;
   } else if (((hours >= 10) && (hours <= 12)) || ((hours >= 19) && (hours <= 20))) {
     $("#Intence").append("Интенсивность движения: средняя");
+    outputRoad = 2;
   } else {
     $("#Intence").append("Интенсивность движения: низкая");
+    outputRoad = 1;
   }
 
   if ((t < 0) || (r === 'Rain')) {
-    $("#Intence").append("Интенсивность движения: средняя");;
+    $("#Intence").append("Интенсивность движения: средняя");
+    outputRoad = 2;
   }
 });
 
@@ -139,8 +145,9 @@ $.each(CarData, function (i, CarData) {
 
 
 
-$(test);
-function test() {
+$(definitionSafety);
+function definitionSafety() {
+
   
   //Определение состояния водителя
   age = document.getElementById("Age").value;
@@ -231,6 +238,14 @@ function test() {
   ]);
   const outputDriver = DriverNet.run({age: ageSafety, exp: expSafety, mental: mentalSafety, sex: sexSafety});
 
+  if ((getMax(outputDriver).safety1) === 'высокий'){
+    driverK = 1;
+  } else if ((getMax(outputDriver).safety1) === 'средний'){
+    driverK = 2;
+  } else if ((getMax(outputDriver).safety1) === 'низкий'){
+    driverK = 3;
+  } 
+
   console.log("Driver")
   console.log(getMax(outputDriver))
 
@@ -284,28 +299,96 @@ function test() {
   ]);
   const outputCar = CarNet.run({car: carSafety, year: yearSafety});
 
+  if ((getMax(outputCar).safety1) === 'высокий'){
+    carK = 1;
+  } else if ((getMax(outputCar).safety1) === 'средний'){
+    carK = 2;
+  } else if ((getMax(outputCar).safety1) === 'низкий'){
+    carK = 3;
+  } 
+
   console.log("Car")
   console.log(getMax(outputCar))
+
+
+  //Определение воздействия среды на дорогу, автомобиль и водителя
+  if ((rain1 === "Есть") || (ice === "Есть")){
+    weatherRoad = 1;
+    weatherCar = 0;
+    weatherDriver = 0.5;
+  } else if ((pres.toFixed(2) > 770.0) || pres.toFixed(2) < 750.0) {
+    weatherRoad = 0;
+    weatherCar = 0;
+    weatherDriver = 1;
+  }
+
+
 
   //Функция вывода максимальной вероятности
   function getMax(output){
     let max = 0;
-    let safety;
+    let safety1;
 
     for(let key in output){
       const value = output[key];
       if(value > max){
         max = value;
-        safety = key;
+        safety1 = key;
       }
     }
 
-    return {safety: safety};
+    return {safety1: safety1};
   }
+
+  //Определение безопасности движения
+  const AllSafety = new brain.NeuralNetwork();
+
+  AllSafety.train([
+    { input: {driver: 1, car: 1, road: 1, weatherCar: 0, weatherDriver: 0, weatherRoad: 0}, output: {высокая: 1} },
+    { input: {driver: 1, car: 2, road: 2, weatherCar: 0, weatherDriver: 0, weatherRoad: 0}, output: {высокая: 1} },
+    { input: {driver: 1, car: 2, road: 3, weatherCar: 0, weatherDriver: 0, weatherRoad: 0}, output: {высокая: 1} },
+    { input: {driver: 1, car: 2, road: 1, weatherCar: 0, weatherDriver: 0, weatherRoad: 0}, output: {высокая: 1} },
+    { input: {driver: 1, car: 2, road: 2, weatherCar: 0, weatherDriver: 0, weatherRoad: 0}, output: {высокая: 1} },
+    { input: {driver: 1, car: 2, road: 3, weatherCar: 0, weatherDriver: 0, weatherRoad: 0}, output: {средняя: 1} },
+    { input: {driver: 1, car: 3, road: 1, weatherCar: 0, weatherDriver: 0, weatherRoad: 0}, output: {высокая: 1} },
+    { input: {driver: 1, car: 1, road: 3, weatherCar: 0, weatherDriver: 0, weatherRoad: 1}, output: {средняя: 1} },
+    { input: {driver: 1, car: 3, road: 3, weatherCar: 1, weatherDriver: 1, weatherRoad: 1}, output: {средняя: 1} },
+    { input: {driver: 2, car: 1, road: 1, weatherCar: 0, weatherDriver: 0, weatherRoad: 0}, output: {высокая: 1} },
+    { input: {driver: 2, car: 2, road: 1, weatherCar: 0, weatherDriver: 0, weatherRoad: 0}, output: {высокая: 1} },
+    { input: {driver: 2, car: 2, road: 2, weatherCar: 0, weatherDriver: 0, weatherRoad: 0}, output: {средняя: 1} },
+    { input: {driver: 2, car: 2, road: 3, weatherCar: 0, weatherDriver: 0, weatherRoad: 0}, output: {средняя: 1} },
+    { input: {driver: 2, car: 3, road: 1, weatherCar: 0, weatherDriver: 0, weatherRoad: 0}, output: {средняя: 1} },
+    { input: {driver: 2, car: 1, road: 3, weatherCar: 0, weatherDriver: 0, weatherRoad: 1}, output: {средняя: 1} },
+    { input: {driver: 2, car: 3, road: 3, weatherCar: 1, weatherDriver: 1, weatherRoad: 1}, output: {средняя: 1} },
+    { input: {driver: 3, car: 3, road: 1, weatherCar: 0, weatherDriver: 0, weatherRoad: 0}, output: {средняя: 1} },
+    { input: {driver: 3, car: 2, road: 1, weatherCar: 0, weatherDriver: 0, weatherRoad: 0}, output: {средняя: 1} },
+    { input: {driver: 3, car: 2, road: 2, weatherCar: 0, weatherDriver: 0, weatherRoad: 0}, output: {низкая: 1} },
+    { input: {driver: 3, car: 2, road: 3, weatherCar: 0, weatherDriver: 0, weatherRoad: 0}, output: {низкая: 1} },
+    { input: {driver: 3, car: 3, road: 1, weatherCar: 0, weatherDriver: 0, weatherRoad: 0}, output: {низкая: 1} },
+    { input: {driver: 3, car: 3, road: 3, weatherCar: 0, weatherDriver: 0, weatherRoad: 1}, output: {низкая: 1} },
+    { input: {driver: 3, car: 3, road: 3, weatherCar: 1, weatherDriver: 1, weatherRoad: 1}, output: {низкая: 1} }
+  ]);
+  const outputSafety = AllSafety.run({driver: driverK, car: carK, road: outputRoad, weatherCar: weatherCar, weatherDriver: weatherDriver, weatherRoad: weatherRoad});
+
+  console.log("Safety")
+  console.log(outputSafety)
+
+
+
+
+  start = document.getElementById("start").value
+  console.log(start)
+
+  if (start === ""){
+    alert("Введите, пожалуйста, ваш маршрут!")
+  } else {
+    $('#Save').text(getMax(outputSafety).safety1);
+  }
+
 
 }
 
 
 
-Calc.addEventListener("click", test);
+Calc.addEventListener("click", definitionSafety);
 
