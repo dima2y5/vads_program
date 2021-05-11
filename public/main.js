@@ -377,10 +377,11 @@ function definitionSafety() {
 
 
   start = document.getElementById("start").value
+  end = document.getElementById("end").value
   console.log(start)
 
-  if (start === ""){
-    alert("Введите, пожалуйста, ваш маршрут!")
+  if ((start === "")||(age === "")||(exp === "")||(mental === "")||(sex === "")||(car === "")||(cyear === "")||(end === "")){
+    alert("Заполните, пожалуйста все поля!")
   } else {
     $('#Save').text(getMax(outputSafety).safety1);
   }
